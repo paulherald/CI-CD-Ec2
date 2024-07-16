@@ -1,17 +1,26 @@
 version: 0.0
 os: linux
 files:
-  - source: /index.html
-    destination: /var/www/html/
+  - source: /
+    destination: /var/www/html
 hooks:
   BeforeInstall:
-    - location: scripts/install_dependencies
+    - location: scripts/before_install.sh
       timeout: 300
       runas: root
-    - location: scripts/start_server
+      log-group-name: /aws/CI-CD-Ec2/BeforeInstall
+  AfterInstall:
+    - location: scripts/after_install.sh
       timeout: 300
       runas: root
-  ApplicationStop:
-    - location: scripts/stop_server
+      log-group-name: /aws/CI-CD-Ec2/AfterInstall
+  ApplicationStart:
+    - location: scripts/applicationstart.sh
       timeout: 300
       runas: root
+      log-group-name: /aws/CI-CD-Ec2/ApplicationStart
+  ValidateService:
+    - location: scripts/validate_service.sh
+      timeout: 300
+      runas: root
+      log-group-name: /aws/CI-CD-Ec2/ValidateService
